@@ -1,25 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useContext } from 'react';
+import { ThemeProvider } from 'styled-components';
+import { I18nProvider } from './providers/i18n';
+import translate from './providers/i18n/translate';
+import LangSwitcher from './components/LangSwitcher';
+import ThemeSwitcher from './components/ThemeSwitcher';
 import './App.css';
+import { AppContext } from './providers/context';
+import { getTheme } from './providers/themes/getTheme';
+import { Header } from './styles';
 
 function App() {
+  const { state } = useContext(AppContext);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={getTheme(state.themeName)}>
+      <I18nProvider locale={state.siteLang}>
+        <div className='App'>
+          <Header>
+            <LangSwitcher />
+            {translate('hello', { name: state.name })}
+            <ThemeSwitcher />
+          </Header>
+        </div>
+      </I18nProvider>
+    </ThemeProvider>
   );
 }
 
